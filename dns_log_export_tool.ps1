@@ -1,4 +1,4 @@
-# Check for admin rights
+# 检查管理员权限
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {
     Start-Process powershell -Verb RunAs -ArgumentList "-File `"$PSCommandPath`""
     exit
@@ -7,18 +7,18 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 Write-Host "DNS Client Log Export Tool" -ForegroundColor Cyan
 Write-Host ""
 
-# Enable DNS logging
+# 开启DNS日志
 Write-Host "Enabling DNS logging..." -ForegroundColor Yellow
 wevtutil sl "Microsoft-Windows-DNS-Client/Operational" /e:true | Out-Null
 wevtutil sl "Microsoft-Windows-DNS-Client/Operational" /ms:10485760 | Out-Null
 
-# Generate test queries
+# 生成测试查询
 Write-Host "Generating test queries..." -ForegroundColor Yellow
-Test-Connection www.microsoft.com -Count 1 -Quiet | Out-Null
-Test-Connection www.google.com -Count 1 -Quiet | Out-Null
+Test-Connection www.huawei.com -Count 1 -Quiet | Out-Null
+Test-Connection www.baidu.com -Count 1 -Quiet | Out-Null
 Start-Sleep -Seconds 1
 
-# Export to CSV
+# 输出到CSV
 $csvPath = "$env:USERPROFILE\Desktop\DNS_Logs_$(Get-Date -Format 'yyyyMMdd_HHmmss').csv"
 $events = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" -ErrorAction SilentlyContinue
 
@@ -45,4 +45,5 @@ else {
 }
 
 Write-Host "Press any key to exit..." -ForegroundColor Gray
+
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
